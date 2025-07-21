@@ -1,6 +1,3 @@
-//
-// Arquivos de Inclusão
-//
 #include "driverlib.h"
 #include "device.h"
 #include "board.h"
@@ -25,9 +22,6 @@
 #define INV_C                  (DT_SIM / C)
 #define INV_R_LOAD             (1.0f / R_LOAD)
 
-//
-// Variáveis Globais da Simulação
-//
 volatile float32_t g_vout_sim = 0.0f;        // Tensão de saída simulada
 volatile float32_t g_il_sim = 0.0f;          // Corrente no indutor simulada
 volatile uint32_t g_step_counter = 0;        // Contador de passos dentro do ciclo PWM
@@ -35,62 +29,68 @@ volatile bool g_switch_on = false;           // Estado da chave (true = ligada)
 volatile bool g_new_step_ready = false;      // Flag para novo passo de simulação
 volatile float g_duty_cycle = 0.5f;          // Razão cíclica (entre 0 e 1)
 
-//
-// Função Principal
-//
+
+__interrupt void INT_myGPIO0_XINT_ISR(void);
+
 void main(void)
 {
     float32_t v_l, i_c;
-
-    // Inicializações do dispositivo
+    // Inicialização dos periféricos
     Device_init();
     Interrupt_initModule();
     Interrupt_initVectorTable();
     Board_init();
 
-    // Habilita interrupções globais
+//    // Atualiza duty no EPWM (baseado na variável)
+//    tbPeriod = EPWM_getTimeBasePeriod(EPWM0_BASE);
+//    cmpValue = (uint32_t)(g_duty_cycle * tbPeriod);
+//    EPWM_setCounterCompareValue(EPWM0_BASE, EPWM_COUNTER_COMPARE_A, cmpValue);
+//
+//    // Habilita interrupção externa
+//    Interrupt_enable(INT_myGPIO0_XINT);
+
     EINT;
     ERTM;
 
-    // Loop principal
     while (1)
     {
-        // Executa apenas se a ISR indicar que é hora de simular
         if (g_new_step_ready)
-        {
-            g_new_step_ready = false;
+                {
+                    g_new_step_ready = false;
 
-            // Tensão no indutor
-            v_l = g_switch_on ? (VIN - g_vout_sim) : (-g_vout_sim);
+                    // Tensão no indutor
+                    v_l = g_switch_on ? (VIN - g_vout_sim) : (-g_vout_sim);
 
-            // Corrente do capacitor
-            i_c = g_il_sim - (g_vout_sim * INV_R_LOAD);
+                    // Corrente do capacitor
+                    i_c = g_il_sim - (g_vout_sim * INV_R_LOAD);
 
-            // Atualização via método de Euler
-            g_il_sim += INV_L * v_l;
-            g_vout_sim += INV_C * i_c;
-        }
+                    // Atualização via método de Euler
+                    g_il_sim += INV_L * v_l;
+                    g_vout_sim += INV_C * i_c;
+
+                }
     }
 }
 
-//
-// Interrupção do Timer (gera novo passo de simulação HIL)
-//
+// Interrupção externa (XINT1 ou outro XINT ligado ao GPIO que recebe o PWM)
+__interrupt void INT_myGPIO0_XINT_ISR(void)
+{
+    g_switch_on = GPIO_readPin(myGPIO0);
+
+    Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP1);
+}
 __interrupt void INT_myCPUTIMER0_ISR(void)
 {
-    // Define estado da chave com base na razão cíclica
-    g_switch_on = (g_step_counter < (uint32_t)(g_duty_cycle * N_STEPS_PER_CYCLE));
-
     // Atualiza contador
-    g_step_counter++;
+       g_step_counter++;
 
-    // Reinicia no fim do ciclo PWM
-    if (g_step_counter >= N_STEPS_PER_CYCLE)
-        g_step_counter = 0;
+       // Reinicia no fim do ciclo PWM
+       if (g_step_counter >= N_STEPS_PER_CYCLE)
+           g_step_counter = 0;
 
-    // Sinaliza para o loop principal que deve simular o próximo passo
-    g_new_step_ready = true;
+       // Sinaliza para o loop principal que deve simular o próximo passo
+       g_new_step_ready = true;
 
-    // Libera nova interrupção
-    Interrupt_clearACKGroup(INT_myCPUTIMER0_INTERRUPT_ACK_GROUP);
+       // Libera nova interrupção
+       Interrupt_clearACKGroup(INT_myCPUTIMER0_INTERRUPT_ACK_GROUP);
 }
