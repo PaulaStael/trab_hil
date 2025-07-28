@@ -11,15 +11,12 @@
  */
 const adc              = scripting.addModule("/driverlib/adc.js", {}, false);
 const adc1             = adc.addInstance();
-const cla              = scripting.addModule("/driverlib/cla.js", {}, false);
-const cla1             = cla.addInstance();
 const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
 const cputimer1        = cputimer.addInstance();
 const dac              = scripting.addModule("/driverlib/dac.js", {}, false);
 const dac1             = dac.addInstance();
 const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
 const epwm1            = epwm.addInstance();
-const epwm2            = epwm.addInstance();
 const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
 const gpio1            = gpio.addInstance();
 const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
@@ -41,23 +38,7 @@ adc1.registerInterrupts             = ["1"];
 adc1.soc0SampleWindow               = 16;
 adc1.enableInterrupt1ContinuousMode = true;
 adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM2_SOCA";
-adc1.adcInt1.enableInterrupt        = true;
-
-cla1.$name             = "myCLA0";
-cla1.enable_CLA_TASK_8 = false;
-cla1.enable_CLA_TASK_7 = false;
-cla1.enable_CLA_TASK_6 = false;
-cla1.enable_CLA_TASK_5 = false;
-cla1.enable_CLA_TASK_4 = false;
-cla1.enable_CLA_TASK_3 = false;
-cla1.enable_CLA_TASK_2 = false;
-cla1.cpuint_CLA_TASK_2 = false;
-cla1.cpuint_CLA_TASK_3 = false;
-cla1.cpuint_CLA_TASK_4 = false;
-cla1.cpuint_CLA_TASK_5 = false;
-cla1.cpuint_CLA_TASK_6 = false;
-cla1.cpuint_CLA_TASK_7 = false;
-cla1.cpuint_CLA_TASK_8 = false;
+adc1.useInterrupts                  = false;
 
 cputimer1.$name                    = "myCPUTIMER0";
 cputimer1.startTimer               = true;
@@ -81,20 +62,12 @@ epwm1.epwmActionQualifier_EPWM_AQ_OUTPUT_A_ON_TIMEBASE_DOWN_CMPA = "EPWM_AQ_OUTP
 epwm1.epwmTimebase_period                                        = 5000;
 epwm1.epwmCounterCompare_cmpA                                    = 3750;
 epwm1.epwmCounterCompare_cmpB                                    = 100;
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEnable                  = true;
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEventPrescalar          = "1";
+epwm1.epwmEventTrigger_EPWM_SOC_A_triggerSource                  = "EPWM_SOC_TBCTR_PERIOD";
 epwm1.epwm.$assign                                               = "EPWM1";
 epwm1.epwm.epwm_aPin.$assign                                     = "boosterpack1.40";
 epwm1.epwm.epwm_bPin.$assign                                     = "boosterpack1.39";
-
-epwm2.epwmTimebase_hsClockDiv                           = "EPWM_HSCLOCK_DIVIDER_1";
-epwm2.epwmTimebase_period                               = 1999;
-epwm2.epwmTimebase_counterMode                          = "EPWM_COUNTER_MODE_UP";
-epwm2.epwmEventTrigger_EPWM_SOC_A_triggerEnable         = true;
-epwm2.epwmEventTrigger_EPWM_SOC_A_triggerSource         = "EPWM_SOC_TBCTR_ZERO_OR_PERIOD";
-epwm2.epwmEventTrigger_EPWM_SOC_A_triggerEventPrescalar = "1";
-epwm2.$name                                             = "EPWM";
-epwm2.epwm.$assign                                      = "EPWM2";
-epwm2.epwm.epwm_aPin.$assign                            = "boosterpack1.38";
-epwm2.epwm.epwm_bPin.$assign                            = "boosterpack1.37";
 
 gpio1.$name                     = "myGPIO0";
 gpio1.useInterrupt              = true;

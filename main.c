@@ -142,23 +142,23 @@ __interrupt void INT_myCPUTIMER0_ISR(void)
 }
 
 
-__interrupt void INT_ADC0_1_ISR(void)
-{
-    // Dispara conversão ADC no canal 0 (AA0)
-    // Lê valor convertido do ADC
-    uint16_t adcResult;
-
-    adcResult = ADC_readResult(ADCARESULT_BASE, ADC0_SOC0);
-
-    // Converte adcResult para volts (se quiser)
-    adcVoltage = ((float) (adcResult*norm_ADC));
-
-    ADC_clearInterruptStatus(ADC0_BASE, ADC_INT_NUMBER1);
-    Interrupt_clearACKGroup(INT_ADC0_1_INTERRUPT_ACK_GROUP);
-
-}
-
-__interrupt void cla1Isr1()
- {
-
- }
+//__interrupt void INT_ADC0_1_ISR(void)
+//{
+//    // Dispara conversão ADC no canal 0 (AA0)
+//    // Lê valor convertido do ADC
+//    uint16_t adcResult;
+//
+//    adcResult = ADC_readResult(ADCARESULT_BASE, ADC0_SOC0);
+//
+//    // Converte adcResult para volts (se quiser)
+//    adcVoltage = ((float) (adcResult*norm_ADC));
+//
+//    ADC_clearInterruptStatus(ADC0_BASE, ADC_INT_NUMBER1);
+//    Interrupt_clearACKGroup(INT_ADC0_1_INTERRUPT_ACK_GROUP);
+//
+//}
+//
+//__interrupt void cla1Isr1()
+// {
+//
+// }
