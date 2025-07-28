@@ -13,6 +13,8 @@ const adc              = scripting.addModule("/driverlib/adc.js", {}, false);
 const adc1             = adc.addInstance();
 const cla              = scripting.addModule("/driverlib/cla.js", {}, false);
 const cla1             = cla.addInstance();
+const cmpss            = scripting.addModule("/driverlib/cmpss.js", {}, false);
+const cmpss1           = cmpss.addInstance();
 const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
 const cputimer1        = cputimer.addInstance();
 const dac              = scripting.addModule("/driverlib/dac.js", {}, false);
@@ -20,6 +22,8 @@ const dac1             = dac.addInstance();
 const dac2             = dac.addInstance();
 const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
 const epwm1            = epwm.addInstance();
+const epwmxbar         = scripting.addModule("/driverlib/epwmxbar.js", {}, false);
+const epwmxbar1        = epwmxbar.addInstance();
 const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
 const gpio1            = gpio.addInstance();
 const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
@@ -42,6 +46,7 @@ adc1.soc0SampleWindow               = 16;
 adc1.enableInterrupt1ContinuousMode = true;
 adc1.useInterrupts                  = false;
 adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM1_SOCA";
+adc1.soc0Channel                    = "ADC_CH_ADCIN2";
 
 cla1.$name              = "myCLA0";
 cla1.enable_CLA_TASK_8  = false;
@@ -61,6 +66,10 @@ cla1.cpuint_CLA_TASK_8  = false;
 cla1.trigger_CLA_TASK_1 = "CLA_TRIGGER_ADCA1";
 cla1.cpuint_CLA_TASK_1  = false;
 
+cmpss1.$name        = "myCMPSS0";
+cmpss1.enableModule = true;
+cmpss1.dacValHigh   = 2000;
+
 cputimer1.$name                    = "myCPUTIMER0";
 cputimer1.startTimer               = true;
 cputimer1.enableInterrupt          = true;
@@ -76,7 +85,6 @@ dac1.referenceVoltage = "DAC_REF_ADC_VREFHI";
 
 dac2.referenceVoltage = "DAC_REF_ADC_VREFHI";
 dac2.enableOutput     = true;
-dac2.dacBase          = "DACC_BASE";
 dac2.$name            = "DAC1";
 
 epwm1.$name                                                      = "EPWM0";
@@ -94,6 +102,9 @@ epwm1.epwmEventTrigger_EPWM_SOC_A_triggerSource                  = "EPWM_SOC_TBC
 epwm1.epwm.$assign                                               = "EPWM1";
 epwm1.epwm.epwm_aPin.$assign                                     = "boosterpack1.40";
 epwm1.epwm.epwm_bPin.$assign                                     = "boosterpack1.39";
+
+epwmxbar1.$name     = "myEPWMXBAR0";
+epwmxbar1.muxesUsed = ["XBAR_MUX01"];
 
 gpio1.$name                     = "myGPIO0";
 gpio1.useInterrupt              = true;
