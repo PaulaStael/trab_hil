@@ -25,7 +25,7 @@
 __interrupt void Cla1Task1()
 {
 
-  //  fVal =  adcVoltage;
+    fResult =  ADC_readResult(ADCARESULT_BASE, ADC0_SOC0);
 
   //  cmp_Value = (uint32_t) (g_duty_cycle * PWM_TOP);
    // EPWM_setCounterCompareValue(EPWM0_BASE, EPWM_COUNTER_COMPARE_A, cmp_Value);

@@ -2,6 +2,7 @@
 #include "device.h"
 #include "board.h"
 #include "math.h"
+#include "shared_vars.h"
 
 /*
  *
@@ -59,11 +60,10 @@ volatile bool g_switch_on = false;           // Estado da chave (true = ligada)
 volatile bool g_new_step_ready = false;     // Flag para novo passo de simulação
 volatile float g_duty_cycle = 0.5f;          // Razão cíclica (entre 0 e 1)
 
-__interrupt void INT_myGPIO0_XINT_ISR(void);
-__interrupt void INT_myCPUTIMER0_ISR(void);
-__interrupt void INT_ADC0_1_ISR(void);
-__interrupt void INT_myCPUTIMER1_ISR(void);
-
+#pragma DATA_SECTION(fVal,"CpuToCla1MsgRAM");
+float fVal;
+#pragma DATA_SECTION(fResult,"Cla1ToCpuMsgRAM");
+float fResult;
 void main(void)
 {
     uint16_t dacVal;

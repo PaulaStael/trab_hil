@@ -14,7 +14,7 @@ extern float fVal;
 //extern volatile uint32_t cmp_Value;
 //extern volatile float g_duty_cycle;
 //extern uint16_t adcResult;
-//extern float fResult;
+extern float fResult;
 
 //extern float REF;
 

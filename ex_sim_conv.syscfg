@@ -11,6 +11,8 @@
  */
 const adc              = scripting.addModule("/driverlib/adc.js", {}, false);
 const adc1             = adc.addInstance();
+const cla              = scripting.addModule("/driverlib/cla.js", {}, false);
+const cla1             = cla.addInstance();
 const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false);
 const cputimer1        = cputimer.addInstance();
 const dac              = scripting.addModule("/driverlib/dac.js", {}, false);
@@ -37,8 +39,26 @@ adc1.enableInterrupt1               = true;
 adc1.registerInterrupts             = ["1"];
 adc1.soc0SampleWindow               = 16;
 adc1.enableInterrupt1ContinuousMode = true;
-adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM2_SOCA";
 adc1.useInterrupts                  = false;
+adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM1_SOCA";
+
+cla1.$name              = "myCLA0";
+cla1.enable_CLA_TASK_2  = false;
+cla1.enable_CLA_TASK_3  = false;
+cla1.enable_CLA_TASK_5  = false;
+cla1.enable_CLA_TASK_4  = false;
+cla1.enable_CLA_TASK_7  = false;
+cla1.enable_CLA_TASK_8  = false;
+cla1.enable_CLA_TASK_6  = false;
+cla1.trigger_CLA_TASK_1 = "CLA_TRIGGER_ADCA1";
+cla1.cpuint_CLA_TASK_1  = false;
+cla1.cpuint_CLA_TASK_2  = false;
+cla1.cpuint_CLA_TASK_3  = false;
+cla1.cpuint_CLA_TASK_4  = false;
+cla1.cpuint_CLA_TASK_5  = false;
+cla1.cpuint_CLA_TASK_6  = false;
+cla1.cpuint_CLA_TASK_7  = false;
+cla1.cpuint_CLA_TASK_8  = false;
 
 cputimer1.$name                    = "myCPUTIMER0";
 cputimer1.startTimer               = true;
