@@ -68,7 +68,7 @@ cla1.cpuint_CLA_TASK_1  = false;
 
 cmpss1.$name        = "myCMPSS0";
 cmpss1.enableModule = true;
-cmpss1.dacValHigh   = 2000;
+cmpss1.dacValHigh   = 2048;
 
 cputimer1.$name                    = "myCPUTIMER0";
 cputimer1.startTimer               = true;
@@ -99,12 +99,16 @@ epwm1.epwmCounterCompare_cmpB                                    = 100;
 epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEnable                  = true;
 epwm1.epwmEventTrigger_EPWM_SOC_A_triggerEventPrescalar          = "1";
 epwm1.epwmEventTrigger_EPWM_SOC_A_triggerSource                  = "EPWM_SOC_TBCTR_PERIOD";
+epwm1.epwmTripZone_EPWM_TZ_ACTION_EVENT_TZA                      = "EPWM_TZ_ACTION_LOW";
+epwm1.epwmDigitalCompare_EPWM_DC_TYPE_DCAH                       = "EPWM_DC_TRIP_TRIPIN4";
+epwm1.epwmDigitalCompare_EPWM_TZ_DC_OUTPUT_A1                    = "EPWM_TZ_EVENT_DCXH_HIGH";
+epwm1.epwmTripZone_oneShotSource                                 = ["EPWM_TZ_SIGNAL_DCAEVT1"];
 epwm1.epwm.$assign                                               = "EPWM1";
 epwm1.epwm.epwm_aPin.$assign                                     = "boosterpack1.40";
 epwm1.epwm.epwm_bPin.$assign                                     = "boosterpack1.39";
 
 epwmxbar1.$name     = "myEPWMXBAR0";
-epwmxbar1.muxesUsed = ["XBAR_MUX01"];
+epwmxbar1.muxesUsed = ["XBAR_MUX00"];
 
 gpio1.$name                     = "myGPIO0";
 gpio1.useInterrupt              = true;
