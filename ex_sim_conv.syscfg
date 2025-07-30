@@ -17,6 +17,7 @@ const cputimer         = scripting.addModule("/driverlib/cputimer.js", {}, false
 const cputimer1        = cputimer.addInstance();
 const dac              = scripting.addModule("/driverlib/dac.js", {}, false);
 const dac1             = dac.addInstance();
+const dac2             = dac.addInstance();
 const epwm             = scripting.addModule("/driverlib/epwm.js", {}, false);
 const epwm1            = epwm.addInstance();
 const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
@@ -73,6 +74,10 @@ dac1.$name            = "DAC0";
 dac1.enableOutput     = true;
 dac1.dacBase          = "DACB_BASE";
 dac1.referenceVoltage = "DAC_REF_ADC_VREFHI";
+
+dac2.$name            = "DAC1";
+dac2.referenceVoltage = "DAC_REF_ADC_VREFHI";
+dac2.enableOutput     = true;
 
 epwm1.$name                                                      = "EPWM0";
 epwm1.epwmTimebase_hsClockDiv                                    = "EPWM_HSCLOCK_DIVIDER_1";

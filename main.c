@@ -71,6 +71,7 @@ __interrupt void INT_myCPUTIMER0_ISR(void);
 void main(void)
 {
     uint16_t dacVal;
+  //  uint16_t dacIl; \\Para corrente
     float32_t v_l, i_c;
     // Inicialização dos periféricos
     Device_init();
@@ -118,6 +119,17 @@ void main(void)
            dacVal = (dacVal > 4095) ? 4095 :  dacVal;
 
             DAC_setShadowValue(DAC0_BASE, dacVal);
+
+
+            // ========================
+           // Saída de corrente no DAC1
+           // Corrente = V/R
+           // ========================
+            // --- DAC1: corrente = V/R ---
+            uint16_t dacIl = (uint16_t)(((float)dacVal) / R_LOAD);
+            if (dacIl > 4095) dacIl = 4095;
+
+            DAC_setShadowValue(DACA_BASE, dacIl);
 
         }
     }
@@ -173,3 +185,4 @@ __interrupt void cla1Isr1(void)
   Interrupt_clearACKGroup(INTERRUPT_ACK_GROUP11);
 }
 */
+
