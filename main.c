@@ -160,3 +160,4 @@ __interrupt void INT_myCPUTIMER0_ISR(void)
     // Libera nova interrupção
     Interrupt_clearACKGroup(INT_myCPUTIMER0_INTERRUPT_ACK_GROUP);
 }
+/// Falta desligar o trip zone
