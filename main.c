@@ -14,14 +14,17 @@
 
 // Parte de compartilhamento de memória
 
-#pragma DATA_SECTION(fVal,"CpuToCla1MsgRAM");
-float fVal;
+#pragma DATA_SECTION(fVal,"Cla1ToCpuMsgRAM");
+float volatile fVal;
 
 #pragma DATA_SECTION(fResult,"Cla1ToCpuMsgRAM");
-float fResult;
+float volatile fResult;
 
 #pragma DATA_SECTION(adcVoltage,"Cla1ToCpuMsgRAM");
 volatile float adcVoltage;
+
+#pragma DATA_SECTION(adcAmper,"Cla1ToCpuMsgRAM");
+volatile float adcAmper;
 
 #pragma DATA_SECTION(REF,"Cla1ToCpuMsgRAM");
 float REF = 8.0f;
@@ -32,7 +35,6 @@ float REF = 8.0f;
 #define norm_DAC 4095.0f/12.0f
 
 #define norm_DAC_il 4095.0f/1.2f
-//#define norm_ADC  18.0f/4095.0F
 
 // varaveis criadas para  PWM
 uint32_t ePwm_TimeBase;
@@ -61,6 +63,7 @@ volatile uint32_t cmp_Value;
 #define INV_R_LOAD             (1.0f / R_LOAD)
 
 volatile float32_t g_vout_sim = 0.0f;        // Tensão de saída simulada
+volatile float32_t i_out_sim = 0.0f;         //corrente na carga
 volatile float32_t g_il_sim = 0.0f;          // Corrente no indutor simulada
 volatile uint32_t g_step_counter = 0;        // Contador de passos dentro do ciclo PWM
 volatile bool g_switch_on = false;           // Estado da chave (true = ligada)
@@ -104,6 +107,9 @@ void main(void)
             // Corrente do capacitor
             i_c = g_il_sim - (g_vout_sim * INV_R_LOAD);
 
+            // corrente na carga
+            i_out_sim = g_vout_sim*INV_R_LOAD;
+
             // Atualização via método de Euler
             g_il_sim += INV_L * v_l;
             g_vout_sim += INV_C * i_c;
@@ -114,6 +120,9 @@ void main(void)
             if (g_vout_sim > VIN)
                 g_vout_sim = VIN;
 
+
+
+
            dacVal = (uint16_t) ((g_vout_sim * norm_DAC));
 
            dacVal = (dacVal > 4095) ? 4095 :  dacVal;
@@ -122,15 +131,11 @@ void main(void)
 
 
 
-            dacVal_il = (uint16_t) ((g_il_sim * norm_DAC_il));
+          dacVal_il = (uint16_t) ((i_out_sim * norm_DAC_il));
 
-          // dacVal_il = (uint16_t) ((dacVal*INV_R_LOAD));
+          dacVal_il = (dacVal_il > 4095) ? 4095 :  dacVal_il;
 
-
-            dacVal_il = (dacVal_il > 4095) ? 4095 :  dacVal_il;
-
-
-            DAC_setShadowValue(DAC1_BASE, dacVal_il);
+          DAC_setShadowValue(DAC1_BASE, dacVal_il);
 
 
         }

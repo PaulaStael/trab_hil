@@ -11,6 +11,8 @@
 //#define REF 8.0f
 
 #define norm_ADC  12.0f/4095.0F
+#define norm_ADC_il  1.2f/4095.0F
+#define LIMIAR_REARME_ADC 0.3f
 
 #define PWM_TOP 5000U  // deve coincidir com TBPRD do EPWM
 #define UL 1.0f         // upper limit
@@ -27,8 +29,11 @@ __interrupt void Cla1Task1(void)
 
    fResult = ADC_readResult(ADCARESULT_BASE, ADC0_SOC0);
 
-   adcVoltage = ((float) (fResult*norm_ADC));
+   adcVoltage =  fResult*norm_ADC;
 
+   fVal = ADC_readResult(ADC1_RESULT_BASE, ADC1_SOC0);
+
+   adcAmper = fVal*norm_ADC_il;
 
     x[2] = x[1]; x[1] = x[0]; x[0] = REF - adcVoltage;
     y[2] = y[1]; y[1] = y[0];
@@ -43,5 +48,14 @@ __interrupt void Cla1Task1(void)
 
     EPWM_setCounterCompareValue(EPWM0_BASE, EPWM_COUNTER_COMPARE_A, duty_cmp);
 
-
+/*
+    if (EPWM_getTripZoneFlagStatus(EPWM0_BASE) & EPWM_TZ_FLAG_OST)
+   {
+        if (adcAmper < LIMIAR_REARME_ADC)
+        {
+            CMPSS_clearFilterLatchHigh(myCMPSS0_BASE); // libera latch do comparador
+            EPWM_clearTripZoneFlag(EPWM0_BASE, EPWM_TZ_FLAG_OST); // limpa flag de falha
+        }
+    }
+    */
 }

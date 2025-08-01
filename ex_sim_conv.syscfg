@@ -11,6 +11,7 @@
  */
 const adc              = scripting.addModule("/driverlib/adc.js", {}, false);
 const adc1             = adc.addInstance();
+const adc2             = adc.addInstance();
 const cla              = scripting.addModule("/driverlib/cla.js", {}, false);
 const cla1             = cla.addInstance();
 const cmpss            = scripting.addModule("/driverlib/cmpss.js", {}, false);
@@ -26,8 +27,10 @@ const epwmxbar         = scripting.addModule("/driverlib/epwmxbar.js", {}, false
 const epwmxbar1        = epwmxbar.addInstance();
 const gpio             = scripting.addModule("/driverlib/gpio.js", {}, false);
 const gpio1            = gpio.addInstance();
+const gpio2            = gpio.addInstance();
 const inputxbar_input  = scripting.addModule("/driverlib/inputxbar_input.js", {}, false);
 const inputxbar_input1 = inputxbar_input.addInstance();
+const inputxbar_input2 = inputxbar_input.addInstance();
 const memcfg           = scripting.addModule("/driverlib/memcfg.js");
 const CMD              = scripting.addModule("/utilities/cmd_tool/cmd_syscfg/source/CMD", {}, false);
 const CMD1             = CMD.addInstance();
@@ -47,6 +50,17 @@ adc1.enableInterrupt1ContinuousMode = true;
 adc1.useInterrupts                  = false;
 adc1.soc0Trigger                    = "ADC_TRIGGER_EPWM1_SOCA";
 adc1.soc0Channel                    = "ADC_CH_ADCIN2";
+
+adc2.$name                          = "ADC1";
+adc2.adcClockPrescaler              = "ADC_CLK_DIV_4_0";
+adc2.enabledSOCs                    = ["ADC_SOC_NUMBER0"];
+adc2.soc0SampleWindow               = 16;
+adc2.soc0Trigger                    = "ADC_TRIGGER_EPWM1_SOCA";
+adc2.enabledInts                    = ["ADC_INT_NUMBER1"];
+adc2.enableInterrupt1               = true;
+adc2.enableInterrupt1ContinuousMode = true;
+adc2.adcBase                        = "ADCC_BASE";
+adc2.soc0Channel                    = "ADC_CH_ADCIN2";
 
 cla1.$name              = "myCLA0";
 cla1.enable_CLA_TASK_8  = false;
@@ -69,6 +83,7 @@ cla1.cpuint_CLA_TASK_1  = false;
 cmpss1.$name        = "myCMPSS0";
 cmpss1.enableModule = true;
 cmpss1.dacValHigh   = 2048;
+cmpss1.cmpssBase    = "CMPSS6_BASE";
 
 cputimer1.$name                    = "myCPUTIMER0";
 cputimer1.startTimer               = true;
@@ -108,7 +123,7 @@ epwm1.epwm.epwm_aPin.$assign                                     = "boosterpack1
 epwm1.epwm.epwm_bPin.$assign                                     = "boosterpack1.39";
 
 epwmxbar1.$name     = "myEPWMXBAR0";
-epwmxbar1.muxesUsed = ["XBAR_MUX00"];
+epwmxbar1.muxesUsed = ["XBAR_MUX10"];
 
 gpio1.$name                     = "myGPIO0";
 gpio1.useInterrupt              = true;
@@ -118,9 +133,15 @@ gpio1.xint.registerInterrupts   = true;
 gpio1.xint.enableInt            = true;
 gpio1.xint.xInt.enableInterrupt = true;
 
+gpio2.$name           = "myGPIO1";
+gpio2.gpioPin.$assign = "boosterpack2.48";
+
 inputxbar_input1.$name         = "myINPUTXBARINPUT0";
 gpio1.xint.inputxbar           = inputxbar_input1;
 inputxbar_input1.inputxbarGpio = "GPIO22";
+
+inputxbar_input2.$name         = "myINPUTXBARINPUT1";
+inputxbar_input2.inputxbarGpio = "GPIO52";
 
 memcfg.init_MEMCFG_SECT_MSGCPUTOCLA1 = true;
 memcfg.init_MEMCFG_SECT_MSGCLA1TOCPU = true;

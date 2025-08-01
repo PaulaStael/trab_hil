@@ -11,8 +11,9 @@
 #include <stdint.h>
 
 
-extern float fVal;
-extern float fResult;
+extern volatile float fVal;
+extern volatile float fResult;
 extern volatile float adcVoltage;
+extern volatile float adcAmper;
 extern  float REF;
 #endif /* SHARED_VARS_H_ */
