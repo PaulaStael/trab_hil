@@ -32,9 +32,9 @@ float REF = 8.0f;
 
 // VREF é a tensão de referência do DAC/ADC
 
-#define norm_DAC 4095.0f/12.0f
+#define norm_DAC 4095.0f/(84.0f)
 
-#define norm_DAC_il 4095.0f/1.2f
+#define norm_DAC_il 4095.0f/(8.4f)
 
 // varaveis criadas para  PWM
 uint32_t ePwm_TimeBase;
@@ -101,8 +101,11 @@ void main(void)
         {
             g_new_step_ready = false;
 
-            // Tensão no indutor
-            v_l = g_switch_on ? (VIN - g_vout_sim) : (-g_vout_sim);
+            // Tensão no indutor buck
+          //  v_l = g_switch_on ? (VIN - g_vout_sim) : (-g_vout_sim);
+
+            // Tensão no indutor boost
+            v_l = g_switch_on ? (VIN) : (VIN - g_vout_sim);
 
             // Corrente do capacitor
             i_c = g_il_sim - (g_vout_sim * INV_R_LOAD);
@@ -117,11 +120,8 @@ void main(void)
             if (g_vout_sim < 0.0f)
                 g_vout_sim = 0.0f;
 
-            if (g_vout_sim > VIN)
-                g_vout_sim = VIN;
-
-
-
+            if (g_vout_sim > (7.0f*VIN))
+                g_vout_sim = (7.0f*VIN);
 
            dacVal = (uint16_t) ((g_vout_sim * norm_DAC));
 
