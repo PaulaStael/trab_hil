@@ -27,7 +27,7 @@ volatile float adcVoltage;
 volatile float adcAmper;
 
 #pragma DATA_SECTION(REF,"Cla1ToCpuMsgRAM");
-float REF = 8.0f;
+volatile float REF = 12.0f;
 
 
 // VREF é a tensão de referência do DAC/ADC
@@ -36,6 +36,8 @@ float REF = 8.0f;
 
 #define norm_DAC_il 4095.0f/(8.4f)
 
+#define LIMIAR_REARME_ADC 40.0f
+
 // varaveis criadas para  PWM
 uint32_t ePwm_TimeBase;
 uint32_t ePwm_MinDuty;
@@ -43,7 +45,8 @@ uint32_t ePwm_MaxDuty;
 uint32_t ePwm_curDuty;
 
 volatile uint32_t cmp_Value;
-//
+volatile bool g_trip_clear = false;
+
 // Definições de Constantes
 //
 #define F_PWM                  10000.0f     // Frequência de chaveamento (Hz)
@@ -56,6 +59,7 @@ volatile uint32_t cmp_Value;
 #define L                      0.001f      // Indutância (H)
 #define C                      0.00001f    // Capacitância (F)
 #define R_LOAD                 10.0f       // Carga resistiva (Ohm)
+//volatile uint32_t R_LOAD = 10.0f;
 
 // Constantes auxiliares (evita divisões repetidas no loop)
 #define INV_L                  (DT_SIM / L)
@@ -138,10 +142,21 @@ void main(void)
           DAC_setShadowValue(DAC1_BASE, dacVal_il);
 
 
-        }
-    }
-}
 
+          if (g_trip_clear)
+          {
+              if ((EPWM_getTripZoneFlagStatus(EPWM0_BASE) & EPWM_TZ_FLAG_OST) != 0U)
+              {
+                  EPWM_clearTripZoneFlag(EPWM0_BASE,EPWM_TZ_INTERRUPT | EPWM_TZ_FLAG_OST | EPWM_TZ_FLAG_DCAEVT1);
+
+              }
+              //g_trip_clear  = 0;
+          }
+
+      }
+
+}
+}
 // Interrupção externa (XINT1 ou outro XINT ligado ao GPIO que recebe o PWM)
 __interrupt void INT_myGPIO0_XINT_ISR(void)
 {
