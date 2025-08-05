@@ -49,7 +49,7 @@ volatile bool g_trip_clear = false;
 
 // Definições de Constantes
 //
-#define F_PWM                  10000.0f     // Frequência de chaveamento (Hz)
+#define F_PWM                  20000.0f     // Frequência de chaveamento (Hz)
 #define T_PWM                  (1.0f / F_PWM) // Período de chaveamento (s)
 #define DT_SIM                 0.000001f    // Passo de simulação (5 µs)
 #define N_STEPS_PER_CYCLE      (uint32_t)(T_PWM / DT_SIM) // Passos por ciclo PWM
